@@ -5,24 +5,36 @@ import java.util.Arrays;
 import java.util.List;
 
 class Handler implements URLHandler {
+    ArrayList<String> s = new ArrayList<String>();
 
     public String handleRequest(URI url){
-        List<String> s = new ArrayList<String>();
-
         if (url.getPath().equals("/")) {
-            for (String r: s) {
-                System.out.prinln(r);
-            }
-        } else if (url.getPath().contains("/add") {
+            return String.format("Welcome");
+        } 
+        else if (url.getPath().contains("/add")) {
             String[] parameters = url.getQuery().split("=");
             if (parameters[0].equals("s")) {
                 s.add(parameters[1]);
-                return String.format("String \"%s\" added!", parameters[1]);
+                return String.format("\"%s\" added!", parameters[1]);
+            } 
+        }
+        else if (url.getPath().contains("/search")) {
+            String[] parameters = url.getQuery().split("=");
+            if (parameters[0].equals("s")) {
+                return findMatch(s, parameters[1]);
+            }
+        }  
+        return "404 Not Found!";
+    }
+
+    public String findMatch(ArrayList<String> in, String match) {
+        ArrayList<String> r = new ArrayList<String>();
+        for (String s: in) {
+            if (s.contains(match)) {
+                r.add(s);
             }
         }
-        else {
-            return "404 Not Found!"
-        }
+        return(r.toString());
     }
 }
 
@@ -33,11 +45,7 @@ class SearchEngine {
             return; 
         }
 
-
         int port = Integer.parseInt(args[0]);
-
         Server.start(port, new Handler());
     }
 }
-
-
